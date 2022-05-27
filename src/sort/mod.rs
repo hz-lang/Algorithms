@@ -3,6 +3,7 @@
 mod selection;
 mod insertion;
 mod shell;
+mod merge;
 
 fn is_sorted(a: &[i32]) -> bool {
     for i in 1..a.len() {
