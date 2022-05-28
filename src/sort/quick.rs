@@ -25,7 +25,7 @@ fn partition(a: &mut [i32]) -> usize {
             i += 1;
         }
         // j 减到 1 即可，再减就是切分元素了。
-        while j > 1 && a[j] > v {
+        while j > 1 && a[j] >= v {
             j -= 1;
         }
         if i >= j {
