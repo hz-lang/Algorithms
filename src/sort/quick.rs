@@ -21,11 +21,11 @@ fn partition(a: &mut [i32]) -> usize {
     let v = a[0]; // 切分元素。
     loop {
         // i 加到 a.len() - 1 即可。
-        while i + 1 < a.len() && a[i] <= v {
+        while i < j && a[i] <= v {
             i += 1;
         }
-        // j 减到 1 即可，再减就是切分元素了。
-        while j > 1 && a[j] >= v {
+        // 切分元素本身即哨兵，因此 j 不可能越界。
+        while a[j] >= v {
             j -= 1;
         }
         if i >= j {
