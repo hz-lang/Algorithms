@@ -4,6 +4,7 @@ mod selection;
 mod insertion;
 mod shell;
 mod merge;
+mod merge_bu;
 
 fn is_sorted(a: &[i32]) -> bool {
     for i in 1..a.len() {
