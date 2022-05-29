@@ -7,6 +7,7 @@ mod merge;
 mod merge_bu;
 mod quick;
 mod quick_3_way;
+mod binary_heap;
 
 fn is_sorted(a: &[i32]) -> bool {
     for i in 1..a.len() {
