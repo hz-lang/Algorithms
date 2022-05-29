@@ -113,9 +113,57 @@ impl MaxPQ {
     }
 }
 
+/// 堆排序。
+struct HeapSort<'a> {
+    buf: &'a mut [i32],
+}
+
+impl<'a> HeapSort<'a> {
+    /// 创建一个二叉堆。
+    pub fn new(a: &'a mut [i32]) -> Self {
+        Self::build_max_heap(a);
+        Self { buf: a }
+    }
+
+    /// 排序。
+    pub fn sort(&mut self) {
+        let a = &mut self.buf[..];
+        // 循环时不要包含索引 0。
+        for i in (1..a.len()).rev() {
+            a.swap(0, i);
+            // 下沉时，不断排除后面已排序的部分。
+            Self::sink(&mut a[..i], 0);
+        }
+    }
+
+    /// 构造最大堆。
+    fn build_max_heap(a: &mut [i32]) {
+        let len = a.len() / 2;
+        for i in (0..len).rev() {
+            Self::sink(a, i);
+        }
+    }
+
+    /// 下沉。
+    fn sink(a: &mut [i32], mut k: usize) {
+        let len = a.len();
+        while 2 * k + 1 < len {
+            let mut j = 2 * k + 1;
+            if j + 1 < len && a[j] < a[j + 1] {
+                j += 1;
+            }
+            if a[k] >= a[j] {
+                break;
+            }
+            a.swap(k, j);
+            k = j;
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::sort::binary_heap::MaxPQ;
+    use crate::sort::{binary_heap::{MaxPQ, HeapSort}, is_sorted};
 
     #[test]
     fn insert() {
@@ -145,5 +193,15 @@ mod tests {
         assert_eq!(Some(&4), iter.next());
         assert_eq!(Some(&2), iter.next());
         assert_eq!(None, iter.next());
+    }
+
+    #[test]
+    fn sort() {
+        let mut a = [8, 5, 7, 6, 4, 9, 3, 1];
+        let mut bs = HeapSort::new(&mut a);
+        assert_eq!(&[9, 6, 8, 5, 4, 7, 3, 1], bs.buf);
+
+        bs.sort();
+        assert!(is_sorted(bs.buf));
     }
 }
