@@ -1,6 +1,7 @@
-#[allow(dead_code)]
+#![allow(dead_code)]
 
-mod sort; 
+mod sort;
+mod search; 
 
 #[cfg(test)]
 mod tests {
