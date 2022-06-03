@@ -2,3 +2,4 @@
 
 mod sequential_search;
 mod binary_search;
+mod bst;
