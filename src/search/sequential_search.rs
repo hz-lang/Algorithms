@@ -3,7 +3,7 @@
 use std::{fmt::Display, marker::PhantomData, ptr::NonNull};
 
 /// 基于无序链表。
-struct SequentialSearchST {
+pub struct SequentialSearchST {
     head: Option<NonNull<Node>>,
     marker: PhantomData<Box<Node>>,
 }
@@ -47,7 +47,7 @@ impl Drop for SequentialSearchST {
 
 impl SequentialSearchST {
     // 创建一个新的无序链表。
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             head: None,
             marker: PhantomData,
@@ -55,7 +55,7 @@ impl SequentialSearchST {
     }
 
     // 查找指定的值。
-    fn get(&self, key: i32) -> Option<i32> {
+    pub fn get(&self, key: i32) -> Option<i32> {
         unsafe {
             let mut x = self.head.as_ref();
             while let Some(node) = x {
@@ -72,7 +72,7 @@ impl SequentialSearchST {
     }
 
     // 添加一个键值对。
-    fn put(&mut self, key: i32, value: i32) {
+    pub fn put(&mut self, key: i32, value: i32) {
         unsafe {
             let mut x = self.head.as_mut();
             while let Some(node) = x {
@@ -93,7 +93,7 @@ impl SequentialSearchST {
     }
 
     // 删除指定的键值对。
-    fn delete(&mut self, key: i32) {
+    pub fn delete(&mut self, key: i32) {
         unsafe {
             let mut previous = self.head.as_ref();
             let mut x = previous.map(|n| (*n.as_ptr()).next.as_ref()).flatten();
