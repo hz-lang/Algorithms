@@ -61,48 +61,23 @@ impl BreadthFirstPaths {
 
 #[cfg(test)]
 mod tests {
+    use crate::graph::graph_data;
     use super::*;
 
     #[test]
     fn has_path_to_test() {
-        let g = graph();
+        let g = graph_data();
         let d = BreadthFirstPaths::new(g, 1);
         assert!(d.has_path_to(0));
     }
 
     #[test]
     fn path_to_test() {
-        let g = graph();
+        let g = graph_data();
         let d = BreadthFirstPaths::new(g, 0);
         let mut list = d.path_to(1);
         assert_eq!(Some(0), list.pop());
         assert_eq!(Some(1), list.pop());
         assert_eq!(None, list.pop());
-    }
-
-    // 0 ------ 2
-    // |\      /|\
-    // | \    / | \
-    // |    1   |  \
-    // 5 ------ 3 - 4
-    fn graph() -> Graph {
-        let mut g = Graph::new(6);
-        g.add_edge(0, 2);
-        g.add_edge(0, 1);
-        g.add_edge(0, 5);
-        g.add_edge(1, 0);
-        g.add_edge(1, 2);
-        g.add_edge(2, 0);
-        g.add_edge(2, 1);
-        g.add_edge(2, 3);
-        g.add_edge(2, 4);
-        g.add_edge(3, 5);
-        g.add_edge(3, 4);
-        g.add_edge(3, 2);
-        g.add_edge(4, 3);
-        g.add_edge(4, 2);
-        g.add_edge(5, 3);
-        g.add_edge(5, 0);
-        g
     }
 }
