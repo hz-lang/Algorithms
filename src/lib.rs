@@ -1,7 +1,8 @@
 #![allow(dead_code)]
 
 mod sort;
-mod search; 
+mod search;
+mod graph; 
 
 #[cfg(test)]
 mod tests {
