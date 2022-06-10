@@ -1,6 +1,7 @@
 //! 图。
 
 mod depth_first_search;
+mod breadth_first_paths;
 
 pub struct Graph {
     v: usize,           // 顶点数。
