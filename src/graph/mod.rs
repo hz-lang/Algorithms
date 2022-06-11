@@ -3,6 +3,7 @@
 mod breadth_first_paths;
 mod cc;
 mod depth_first_search;
+mod cycle;
 
 pub struct Graph {
     v: usize,           // 顶点数。
