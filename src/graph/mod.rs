@@ -5,7 +5,9 @@ mod cc;
 mod depth_first_search;
 mod cycle;
 mod two_color;
+mod symbol_graph;
 
+#[derive(Debug)]
 pub struct Graph {
     v: usize,           // 顶点数。
     e: usize,           // 边的数目。
