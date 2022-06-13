@@ -7,6 +7,7 @@ mod cycle;
 mod two_color;
 mod symbol_graph;
 mod digraph;
+mod directed_dfs;
 
 #[derive(Debug)]
 pub struct Graph {
