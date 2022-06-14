@@ -32,7 +32,7 @@ impl SymbolGraph {
             let v = a.next().map(|k| s.st[k]).expect("顶点之间必须有空格");
             for k in a {
                 let w = s.st[k];
-                s.g.add_edge(v as i32, w as i32);
+                s.g.add_edge(v, w);
             }
         }
         s

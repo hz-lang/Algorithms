@@ -4,7 +4,7 @@ use super::Graph;
 
 pub struct CC {
     marked: Vec<bool>,
-    id: Vec<i32>,
+    id: Vec<usize>,
     count: usize,
 }
 
@@ -28,22 +28,22 @@ impl CC {
 
     fn dfs(&mut self, g: &Graph, s: usize) {
         self.marked[s] = true;
-        self.id[s] = self.count as i32;
-        for w in g.adj(s as i32) {
+        self.id[s] = self.count;
+        for w in g.adj(s) {
             if !self.marked[*w as usize] {
                 self.dfs(g, *w as usize);
             }
-        } 
+        }
     }
 
     /// v 所在的连通分量的标识符。
-    pub fn id(&self, v: i32) -> i32 {
-        self.id[v as usize]
+    pub fn id(&self, v: usize) -> usize {
+        self.id[v]
     }
 
     /// v 和 w 是否连通。
-    pub fn connected(&self, v: i32, w: i32) -> bool {
-        self.id[v as usize] == self.id[w as usize]
+    pub fn connected(&self, v: usize, w: usize) -> bool {
+        self.id[v] == self.id[w]
     }
 
     /// 连通分量数。
@@ -54,8 +54,8 @@ impl CC {
 
 #[cfg(test)]
 mod tests {
-    use crate::graph::graph_data;
     use super::*;
+    use crate::graph::graph_data;
 
     #[test]
     fn connected_test() {

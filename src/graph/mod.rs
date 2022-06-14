@@ -2,18 +2,19 @@
 
 mod breadth_first_paths;
 mod cc;
-mod depth_first_search;
 mod cycle;
-mod two_color;
-mod symbol_graph;
+mod depth_first_search;
 mod digraph;
+mod directed_cycle;
 mod directed_dfs;
+mod symbol_graph;
+mod two_color;
 
 #[derive(Debug)]
 pub struct Graph {
-    v: usize,           // 顶点数。
-    e: usize,           // 边的数目。
-    adj: Vec<Vec<i32>>, // 邻接表。
+    v: usize,             // 顶点数。
+    e: usize,             // 边的数目。
+    adj: Vec<Vec<usize>>, // 邻接表。
 }
 
 impl Graph {
@@ -27,15 +28,15 @@ impl Graph {
     }
 
     /// 添加一条边。
-    pub fn add_edge(&mut self, v: i32, w: i32) {
-        self.adj[v as usize].push(w);
-        self.adj[w as usize].push(v);
+    pub fn add_edge(&mut self, v: usize, w: usize) {
+        self.adj[v].push(w);
+        self.adj[w].push(v);
         self.e += 1;
     }
 
     /// 获取邻接的顶点。
-    pub fn adj(&self, v: i32) -> &[i32] {
-        &self.adj[v as usize][..]
+    pub fn adj(&self, v: usize) -> &[usize] {
+        &self.adj[v][..]
     }
 
     /// 获取图的顶点数。

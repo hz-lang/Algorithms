@@ -27,11 +27,11 @@ impl TwoColor {
 
     fn dfs(&mut self, g: &Graph, s: usize) {
         self.marked[s] = true;
-        for w in g.adj(s as i32) {
-            if !self.marked[*w as usize] {
-                self.color[*w as usize] = !self.color[*w as usize];
-                self.dfs(g, *w as usize);
-            } else if self.color[s] == self.color[*w as usize] {
+        for w in g.adj(s) {
+            if !self.marked[*w] {
+                self.color[*w] = !self.color[*w];
+                self.dfs(g, *w);
+            } else if self.color[s] == self.color[*w] {
                 self.is_two_colorable = false;
             }
         }

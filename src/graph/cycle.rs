@@ -24,10 +24,10 @@ impl Cycle {
 
     fn dfs(&mut self, g: &Graph, v: usize, u: usize) {
         self.marked[v] = true;
-        for w in g.adj(v as i32) {
-            if !self.marked[*w as usize] {
-                self.dfs(g, *w as usize, v);
-            } else if *w != u as i32 {
+        for w in g.adj(v) {
+            if !self.marked[*w] {
+                self.dfs(g, *w, v);
+            } else if *w != u {
                 self.has_cycle = true;
             }
         }
@@ -41,8 +41,8 @@ impl Cycle {
 
 #[cfg(test)]
 mod tests {
-    use crate::graph::graph_data;
     use super::*;
+    use crate::graph::graph_data;
 
     #[test]
     fn has_cycle_test() {

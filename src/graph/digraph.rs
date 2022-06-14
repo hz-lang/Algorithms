@@ -2,9 +2,9 @@
 
 #[derive(Debug)]
 pub struct Digraph {
-    v: usize,           // 顶点数。
-    e: usize,           // 边的数目。
-    adj: Vec<Vec<i32>>, // 邻接表。
+    v: usize,             // 顶点数。
+    e: usize,             // 边的数目。
+    adj: Vec<Vec<usize>>, // 邻接表。
 }
 
 impl Digraph {
@@ -18,14 +18,14 @@ impl Digraph {
     }
 
     /// 添加一条边。
-    pub fn add_edge(&mut self, v: i32, w: i32) {
-        self.adj[v as usize].push(w);
+    pub fn add_edge(&mut self, v: usize, w: usize) {
+        self.adj[v].push(w);
         self.e += 1;
     }
 
     /// 获取邻接的顶点。
-    pub fn adj(&self, v: i32) -> &[i32] {
-        &self.adj[v as usize][..]
+    pub fn adj(&self, v: usize) -> &[usize] {
+        &self.adj[v][..]
     }
 
     /// 获取图的顶点数。
@@ -42,8 +42,8 @@ impl Digraph {
     pub fn reverse(&self) -> Self {
         let mut r = Self::new(self.v);
         for v in 0..self.v {
-            for w in self.adj(v as i32) {
-                r.add_edge(*w, v as i32);
+            for w in self.adj(v) {
+                r.add_edge(*w, v);
             }
         }
         r

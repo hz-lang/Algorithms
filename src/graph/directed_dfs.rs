@@ -17,9 +17,9 @@ impl DirectedDFS {
 
     fn dfs(&mut self, g: &Digraph, s: usize) {
         self.marked[s] = true;
-        for w in g.adj(s as i32) {
-            if !self.marked[*w as usize] {
-                self.dfs(g, *w as usize);
+        for w in g.adj(s) {
+            if !self.marked[*w] {
+                self.dfs(g, *w);
             }
         }
     }
