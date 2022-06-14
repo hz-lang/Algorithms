@@ -9,6 +9,7 @@ mod directed_cycle;
 mod directed_dfs;
 mod symbol_graph;
 mod two_color;
+mod depth_first_order;
 
 #[derive(Debug)]
 pub struct Graph {
