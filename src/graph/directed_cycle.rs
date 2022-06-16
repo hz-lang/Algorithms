@@ -13,7 +13,7 @@ pub struct DirectedCycle {
 
 impl DirectedCycle {
     /// 创建一个 [`DirectedCycle`]。
-    pub fn new(g: Digraph) -> Self {
+    pub fn new(g: &mut Digraph) -> Self {
         let mut d = Self {
             marked: vec![false; g.v()],
             edge_to: vec![0; g.v()],
@@ -22,7 +22,7 @@ impl DirectedCycle {
         };
         for v in 0..g.v() {
             if !d.marked[v] {
-                d.dfs(&g, v);
+                d.dfs(g, v);
             }
         }
         d
@@ -89,6 +89,6 @@ mod tests {
         g.add_edge(1, 2);
         g.add_edge(2, 3);
         g.add_edge(3, 1);
-        DirectedCycle::new(g)
+        DirectedCycle::new(&mut g)
     }
 }

@@ -12,7 +12,7 @@ pub struct DepthFirstOrder {
 }
 
 impl DepthFirstOrder {
-    pub fn new(g: Digraph) -> Self {
+    pub fn new(g: &mut Digraph) -> Self {
         let mut d = DepthFirstOrder {
             marked: vec![false; g.v()],
             pre: vec![],
@@ -86,6 +86,6 @@ mod tests {
         g.add_edge(1, 3);
         g.add_edge(2, 4);
         g.add_edge(3, 5);
-        DepthFirstOrder::new(g)
+        DepthFirstOrder::new(&mut g)
     }
 }
