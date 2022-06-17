@@ -11,6 +11,7 @@ mod symbol_graph;
 mod two_color;
 mod depth_first_order;
 mod topological;
+mod kosaraju_scc;
 
 #[derive(Debug)]
 pub struct Graph {
