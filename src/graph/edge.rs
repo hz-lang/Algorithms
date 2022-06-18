@@ -1,6 +1,9 @@
 //! 带权重的边。
 
-use std::{cmp, fmt::{Display, self}};
+use std::{
+    cmp,
+    fmt::{self, Display},
+};
 
 pub struct Edge {
     v: usize,    // 边的顶点。
