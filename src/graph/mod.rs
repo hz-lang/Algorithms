@@ -13,6 +13,7 @@ mod depth_first_order;
 mod topological;
 mod kosaraju_scc;
 mod transitive_closure;
+mod edge;
 
 #[derive(Debug)]
 pub struct Graph {
