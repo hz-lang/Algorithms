@@ -7,7 +7,7 @@ pub struct DirectedDFS {
 }
 
 impl DirectedDFS {
-    pub fn new(g: Digraph, s: usize) -> Self {
+    pub fn new(g: &Digraph, s: usize) -> Self {
         let mut d = Self {
             marked: vec![false; g.v()],
         };
@@ -46,6 +46,6 @@ mod tests {
         g.add_edge(3, 5);
         g.add_edge(5, 1);
 
-        DirectedDFS::new(g, 1)
+        DirectedDFS::new(&g, 1)
     }
 }

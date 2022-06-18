@@ -12,6 +12,7 @@ mod two_color;
 mod depth_first_order;
 mod topological;
 mod kosaraju_scc;
+mod transitive_closure;
 
 #[derive(Debug)]
 pub struct Graph {
