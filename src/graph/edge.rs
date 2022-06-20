@@ -5,6 +5,7 @@ use std::{
     fmt::{self, Display},
 };
 
+#[derive(Debug, Clone)]
 pub struct Edge {
     v: usize,    // 边的顶点。
     w: usize,    // 边的另一个顶点。
