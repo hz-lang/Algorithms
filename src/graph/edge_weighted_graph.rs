@@ -1,12 +1,14 @@
 //! 加权无向图。
 
 use super::edge::Edge;
-use std::slice::Iter;
+use std::{ptr::NonNull, slice::Iter};
+
+type T = Option<NonNull<Edge>>;
 
 pub struct EdgeWeightedGraph {
-    v: usize,            // 顶点的总数。
-    e: usize,            // 边的总数。
-    adj: Vec<Vec<Edge>>, // 邻接表。
+    v: usize,         // 顶点的总数。
+    e: usize,         // 边的总数。
+    adj: Vec<Vec<T>>, // 邻接表。
 }
 
 impl EdgeWeightedGraph {
@@ -32,31 +34,50 @@ impl EdgeWeightedGraph {
     /// 添加一条边。
     pub fn add_edge(&mut self, e: Edge) {
         let v = e.either();
-        self.adj[v].push(e.clone());
+        let e = Box::leak(Box::new(e)).into();
+        self.adj[v].push(Some(e));
 
-        if let Some(w) = e.other(v) {
-            self.adj[w].push(e);
+        let temp_e = unsafe { e.as_ref() };
+        if let Some(w) = temp_e.other(v) {
+            self.adj[w].push(Some(e));
         }
 
         self.e += 1;
     }
 
     /// 获取与 v 相关联的所有边。
-    pub fn adj(&self, v: usize) -> Iter<Edge> {
-        self.adj[v].iter()
+    pub fn adj(&self, v: usize) -> EdgeWeightedGraphIter {
+        EdgeWeightedGraphIter {
+            it: self.adj[v].iter()
+        }
     }
 
     /// 获取图的所有边。
-    pub fn edges(&self) -> Vec<Edge> {
+    pub fn edges(&self) -> Vec<&Edge> {
         let mut b = vec![];
         for v in 0..self.v {
             for e in self.adj(v) {
                 if e.other(v).filter(|&i| i > v).is_some() {
-                    b.push(e.clone());
+                    b.push(e);
                 }
             }
         }
         b
+    }
+}
+
+pub struct EdgeWeightedGraphIter<'a> {
+    it: Iter<'a, T>,
+}
+
+impl<'a> Iterator for EdgeWeightedGraphIter<'a> {
+    type Item = &'a Edge;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.it.next() {
+            None => None,
+            Some(e) => e.map(|i| unsafe { i.as_ref() }),
+        }
     }
 }
 
@@ -67,7 +88,7 @@ mod tests {
     #[test]
     fn test() {
         let e = create();
-        let list = e.edges();
+        let list: Vec<Edge> = e.edges().iter().map(|i| (*i).clone()).collect();
         let r = edges();
         assert_eq!(r, list);
     }
