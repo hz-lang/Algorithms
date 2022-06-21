@@ -1,5 +1,7 @@
 //! 二叉堆。
 
+use std::slice::Iter;
+
 struct BinaryHeap {
     buf: Vec<i32>,
     len: usize,
@@ -17,8 +19,7 @@ impl BinaryHeap {
     /// 获取二叉堆的迭代器。
     pub fn iter(&self) -> BinaryHeapIter {
         BinaryHeapIter {
-            i: 0,
-            buf: &self.buf[1..=self.len],
+            it: self.buf.iter(),
         }
     }
 
@@ -68,21 +69,14 @@ impl BinaryHeap {
 
 /// 二叉堆的迭代器。
 struct BinaryHeapIter<'a> {
-    i: usize,
-    buf: &'a [i32],
+    it: Iter<'a, i32>,
 }
 
 impl<'a> Iterator for BinaryHeapIter<'a> {
     type Item = &'a i32;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let i = self.i;
-        if i < self.buf.len() {
-            self.i += 1;
-            Some(&self.buf[i])
-        } else {
-            None
-        }
+        self.it.next()
     }
 }
 
