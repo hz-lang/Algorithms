@@ -2,22 +2,28 @@
 
 use std::slice::Iter;
 
-struct BinaryHeap {
-    buf: Vec<i32>,
-    len: usize,
+pub struct BinaryHeap<T> {
+    buf: Vec<T>,
 }
 
-impl BinaryHeap {
+impl<T> BinaryHeap<T>
+where
+    T: Clone + PartialOrd + PartialEq + Default,
+{
     /// 创建一个指定容量的二叉堆。
     pub fn new(capacity: usize) -> Self {
         Self {
-            buf: vec![0; capacity + 1],
-            len: 0, // 数组的第一个元素没有使用。
+            buf: Vec::with_capacity(capacity),
         }
     }
 
+    /// 利用[`Vec`]创建一个二叉堆。
+    pub fn from_vec(buf: Vec<T>) -> Self {
+        Self { buf }
+    }
+
     /// 获取二叉堆的迭代器。
-    pub fn iter(&self) -> BinaryHeapIter {
+    pub fn iter(&self) -> BinaryHeapIter<T> {
         BinaryHeapIter {
             it: self.buf.iter(),
         }
@@ -25,55 +31,101 @@ impl BinaryHeap {
 
     /// 获取二叉堆的元素数。
     fn len(&self) -> usize {
-        self.len
+        self.buf.len()
     }
 
     /// 在二叉堆最后添加一个元素。
-    fn push(&mut self, item: i32) {
-        self.len += 1;
-        self.buf[self.len] = item;
+    fn push(&mut self, item: T) {
+        self.buf.push(item);
     }
 
     /// 从二叉堆顶部取出一个元素，并用最后一个元素顶替。
-    fn pop(&mut self) -> i32 {
-        let max = self.buf[1];
-        self.buf[1] = i32::MIN; // 清除最大元素。
-        self.buf.swap(1, self.len);
-        self.len -= 1;
+    fn pop(&mut self) -> T {
+        let max = self.buf[0].clone();
+        let len = self.len() - 1;
+        self.buf.swap(0, len);
+        self.buf.remove(len);
         max
     }
 
     /// 上浮。
-    fn swim(&mut self, mut k: usize) {
-        while k > 1 && self.buf[k / 2] < self.buf[k] {
-            self.buf.swap(k / 2, k);
-            k /= 2;
-        }
+    pub fn swim(&mut self, k: usize) {
+        swim(&mut self.buf, k);
     }
 
     /// 下沉。
-    fn sink(&mut self, mut k: usize) {
-        while 2 * k <= self.len {
-            let mut j = 2 * k;
-            if j < self.len && self.buf[j] < self.buf[j + 1] {
-                j += 1;
-            }
-            if self.buf[k] >= self.buf[j] {
-                break;
-            }
-            self.buf.swap(k, j);
-            k = j;
+    pub fn sink(&mut self, k: usize) {
+        sink(&mut self.buf, k)
+    }
+
+    /// 获取二叉堆的切片。
+    pub fn as_slice(&self) -> &[T] {
+        &self.buf
+    }
+
+    /// 获取二叉堆的可变切片。
+    pub fn as_mut_slice(&mut self) -> &mut [T] {
+        &mut self.buf
+    }
+}
+
+/// 获取左叶子。
+fn left(k: usize) -> usize {
+    (k << 1) + 1
+}
+
+/// 获取右叶子。
+fn right(k: usize) -> usize {
+    (k + 1) << 1
+}
+
+/// 获取父节点。
+fn parent(k: usize) -> usize {
+    match k {
+        0 => 0,
+        _ => (k - 1) >> 1,
+    }
+}
+
+/// 上浮。
+fn swim<T>(a: &mut [T], mut k: usize)
+where
+    T: PartialOrd,
+{
+    let mut i = parent(k);
+    while k > 0 && a[i] < a[k] {
+        a.swap(i, k);
+        k = i;
+        i = parent(k);
+    }
+}
+
+/// 下沉。
+fn sink<T>(a: &mut [T], mut k: usize)
+where
+    T: PartialOrd,
+{
+    let mut j = left(k);
+    while j < a.len() {
+        if j + 1 < a.len() && a[j] < a[j + 1] {
+            j += 1;
         }
+        if a[k] >= a[j] {
+            break;
+        }
+        a.swap(k, j);
+        k = j;
+        j = left(k);
     }
 }
 
 /// 二叉堆的迭代器。
-struct BinaryHeapIter<'a> {
-    it: Iter<'a, i32>,
+pub struct BinaryHeapIter<'a, T> {
+    it: Iter<'a, T>,
 }
 
-impl<'a> Iterator for BinaryHeapIter<'a> {
-    type Item = &'a i32;
+impl<'a, T> Iterator for BinaryHeapIter<'a, T> {
+    type Item = &'a T;
 
     fn next(&mut self) -> Option<Self::Item> {
         self.it.next()
@@ -81,11 +133,14 @@ impl<'a> Iterator for BinaryHeapIter<'a> {
 }
 
 /// 优先队列。
-struct MaxPQ {
-    h: BinaryHeap,
+pub struct MaxPQ<T> {
+    h: BinaryHeap<T>,
 }
 
-impl MaxPQ {
+impl<T> MaxPQ<T>
+where
+    T: Default + Clone + PartialEq + PartialOrd,
+{
     /// 创建一个指定大小的优先队列。
     fn new(capacity: usize) -> Self {
         Self {
@@ -94,70 +149,63 @@ impl MaxPQ {
     }
 
     /// 插入新元素。
-    fn insert(&mut self, item: i32) {
+    fn insert(&mut self, item: T) {
         self.h.push(item);
-        self.h.swim(self.h.len());
+        self.h.swim(self.h.len() - 1);
     }
 
     /// 删除并返回最大元素。
-    fn delete_max(&mut self) -> i32 {
+    fn delete_max(&mut self) -> T {
         let max = self.h.pop();
-        self.h.swim(1);
+        self.h.swim(0);
         max
     }
 }
 
 /// 堆排序。
-struct HeapSort<'a> {
-    buf: &'a mut [i32],
+pub struct HeapSort<T> {
+    buf: BinaryHeap<T>,
 }
 
-impl<'a> HeapSort<'a> {
+impl<T> HeapSort<T>
+where
+    T: Default + Clone + PartialEq + PartialOrd,
+{
     /// 创建一个二叉堆。
-    pub fn new(a: &'a mut [i32]) -> Self {
-        Self::build_max_heap(a);
-        Self { buf: a }
+    pub fn new(a: Vec<T>) -> Self {
+        let mut h = Self {
+            buf: BinaryHeap::from_vec(a),
+        };
+        h.build_max_heap();
+        h
     }
 
     /// 排序。
     pub fn sort(&mut self) {
-        let a = &mut self.buf[..];
+        let a = self.buf.as_mut_slice();
         // 循环时不要包含索引 0。
         for i in (1..a.len()).rev() {
             a.swap(0, i);
             // 下沉时，不断排除后面已排序的部分。
-            Self::sink(&mut a[..i], 0);
+            sink(&mut a[..i], 0);
         }
     }
 
     /// 构造最大堆。
-    fn build_max_heap(a: &mut [i32]) {
-        let len = a.len() / 2;
+    fn build_max_heap(&mut self) {
+        let len = self.buf.len() / 2;
         for i in (0..len).rev() {
-            Self::sink(a, i);
-        }
-    }
-
-    /// 下沉。
-    fn sink(a: &mut [i32], mut k: usize) {
-        let len = a.len();
-        while 2 * k + 1 < len {
-            let mut j = 2 * k + 1;
-            if j + 1 < len && a[j] < a[j + 1] {
-                j += 1;
-            }
-            if a[k] >= a[j] {
-                break;
-            }
-            a.swap(k, j);
-            k = j;
+            self.buf.sink(i);
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::sort::{binary_heap::{MaxPQ, HeapSort}, is_sorted};
+    use crate::sort::{
+        binary_heap::{HeapSort, MaxPQ},
+        is_sorted,
+    };
 
     #[test]
     fn insert() {
@@ -191,11 +239,11 @@ mod tests {
 
     #[test]
     fn sort() {
-        let mut a = [8, 5, 7, 6, 4, 9, 3, 1];
-        let mut bs = HeapSort::new(&mut a);
-        assert_eq!(&[9, 6, 8, 5, 4, 7, 3, 1], bs.buf);
+        let a = vec![8, 5, 7, 6, 4, 9, 3, 1];
+        let mut bs = HeapSort::new(a);
+        assert_eq!(&[9, 6, 8, 5, 4, 7, 3, 1], &bs.buf.buf[..]);
 
         bs.sort();
-        assert!(is_sorted(bs.buf));
+        assert!(is_sorted(&bs.buf.buf[..]));
     }
 }
