@@ -52,6 +52,15 @@ impl PartialEq for Edge {
     }
 }
 
+impl Eq for Edge {}
+
+impl Ord for Edge {
+    fn cmp(&self, other: &Self) -> cmp::Ordering {
+        self.partial_cmp(other)
+            .expect(&format!("{} 与 {} 无法比较", self, other))
+    }
+}
+
 impl Display for Edge {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}-{} {:.2}", self.v, self.w, self.weight)
