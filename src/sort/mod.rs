@@ -8,6 +8,8 @@ mod merge_bu;
 mod quick;
 mod quick_3_way;
 mod binary_heap;
+mod heap_sort;
+mod max_pq;
 
 fn is_sorted(a: &[i32]) -> bool {
     for i in 1..a.len() {
