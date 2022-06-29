@@ -1,6 +1,6 @@
 //! 二叉堆。
 
-use std::{slice::Iter, cmp};
+use std::slice::Iter;
 
 pub struct BinaryHeap<T> {
     buf: Vec<T>,
