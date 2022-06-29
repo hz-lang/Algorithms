@@ -1,6 +1,6 @@
 //! 二叉堆。
 
-use std::slice::Iter;
+use std::{slice::Iter, cmp};
 
 pub struct BinaryHeap<T> {
     buf: Vec<T>,
@@ -70,17 +70,17 @@ where
 }
 
 /// 获取左叶子。
-fn left(k: usize) -> usize {
+pub(crate) fn left(k: usize) -> usize {
     (k << 1) + 1
 }
 
 /// 获取右叶子。
-fn right(k: usize) -> usize {
+pub(crate) fn right(k: usize) -> usize {
     (k + 1) << 1
 }
 
 /// 获取父节点。
-fn parent(k: usize) -> usize {
+pub(crate) fn parent(k: usize) -> usize {
     match k {
         0 => 0,
         _ => (k - 1) >> 1,
