@@ -35,15 +35,15 @@ impl PrimMST {
         for e in g.adj(v) {
             e.other(v).map(|w| {
                 if self.marked[w] || e.weight() >= self.dist_to[w] {
-                    return;
+                    return; // v-w 失效。
                 }
 
+                // 连接 w 和树的最佳边。
                 self.edge_to[w] = e.clone();
                 self.dist_to[w] = e.weight();
-                if let Some(v) = self.pq.get_mut(|v| v.v == w) {
-                    v.weight = self.dist_to[w];
-                } else {
-                    self.pq.insert(EdgeIndex::new(w, self.dist_to[w]));
+                match self.pq.get_mut(|v| v.v == w) {
+                    Some(v) => v.weight = self.dist_to[w],
+                    None => self.pq.insert(EdgeIndex::new(w, self.dist_to[w])),
                 }
             });
         }
