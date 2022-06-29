@@ -16,6 +16,7 @@ mod transitive_closure;
 mod edge;
 mod edge_weighted_graph;
 mod lazy_prim_mst;
+mod prim_mst;
 
 #[derive(Debug)]
 pub struct Graph {

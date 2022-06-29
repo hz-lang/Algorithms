@@ -7,30 +7,43 @@ pub struct MinPQ<T> {
 
 impl<T> MinPQ<T>
 where
-    T: Default + Clone + PartialEq + PartialOrd,
+    T: PartialEq + PartialOrd,
 {
     /// 创建一个指定大小的最小堆。
-    fn new(capacity: usize) -> Self {
+    pub fn new(capacity: usize) -> Self {
         Self {
             h: Vec::with_capacity(capacity),
         }
     }
 
     /// 插入新元素。
-    fn insert(&mut self, item: T) {
+    pub fn insert(&mut self, item: T) {
         self.h.push(item);
         let i = self.h.len() - 1;
         swim(&mut self.h, i);
     }
 
     /// 删除并返回最小元素。
-    fn delete_min(&mut self) -> Option<T> {
+    pub fn delete_min(&mut self) -> Option<T> {
         let i = self.h.len() - 1;
         self.h.swap(0, i);
 
         let min = self.h.pop();
         sink(&mut self.h, 0);
         min
+    }
+
+    /// 是否符合指定的条件。
+    pub fn get_mut<F>(&mut self, f: F) -> Option<&mut T>
+    where
+        F: Fn(&T) -> bool,
+    {
+        for v in self.h.iter_mut() {
+            if f(v) {
+                return Some(v);
+            }
+        }
+        None
     }
 }
 
