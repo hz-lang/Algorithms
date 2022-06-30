@@ -17,6 +17,8 @@ mod edge;
 mod edge_weighted_graph;
 mod lazy_prim_mst;
 mod prim_mst;
+mod kruskal_mst;
+mod union_find;
 
 #[derive(Debug)]
 pub struct Graph {
