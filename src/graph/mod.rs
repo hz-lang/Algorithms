@@ -19,6 +19,7 @@ mod lazy_prim_mst;
 mod prim_mst;
 mod kruskal_mst;
 mod union_find;
+mod directed_edge;
 
 #[derive(Debug)]
 pub struct Graph {
