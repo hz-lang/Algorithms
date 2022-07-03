@@ -2,6 +2,7 @@
 
 use std::fmt::{Display, Formatter, self};
 
+#[derive(Debug, Clone)]
 pub struct DirectedEdge {
     v: usize,    // 边的起点。&
     w: usize,    // 边的终点。

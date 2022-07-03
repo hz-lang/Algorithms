@@ -20,6 +20,7 @@ mod prim_mst;
 mod kruskal_mst;
 mod union_find;
 mod directed_edge;
+mod edge_weighted_digraph;
 
 #[derive(Debug)]
 pub struct Graph {
